@@ -20,6 +20,7 @@ import {
   type PluginSidebarProps,
 } from "@paperclipai/plugin-sdk/ui";
 import { useCallback, useEffect, useMemo, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type ReactElement, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { readIngestOperationIssueId, uploadIssueAttachmentFile } from "./issue-attachments.js";
 
 // ---------------------------------------------------------------------------
@@ -2105,7 +2106,8 @@ function CreateSpaceModal({
 
   const previewName = displayName.trim() || "your-space";
 
-  return (
+  // Render in <body>. The sidebar mount sits in the host sidebar stacking context, so an inline fixed overlay paints under the page content.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -2250,7 +2252,8 @@ function CreateSpaceModal({
           <Button variant="primary" onClick={submit} disabled={!canSubmit} loading={busy} style={{ flex: isMobile ? 1 : undefined }}>Create space</Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
